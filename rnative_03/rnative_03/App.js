@@ -8,45 +8,28 @@ import {
   TouchableOpacity,
   Platform,
   Button,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import SuperText from './src/widgets/superText';
+import DeviceInfo from  'react-native-device-info';
 
 class App extends Component {
 
-
+  
   render() {
+    console.warn(DeviceInfo.getBatteryLevel())
     return (
+
       <View style={styles.app}>
-
-        <Icon.Button
-          name="facebook-box"
-          backgroundColor='#3b5998'
-          onPress={()=>alert('touched')}
-          >
-            <Text style={{color:'#fff', fontSize:15}}>Login with facebook</Text>
-          </Icon.Button>
-          <Icon.Button
-          name="google"
-          backgroundColor='red'
-          onPress={()=>alert('touched')}
-          >
-            <Text style={{color:'#fff', fontSize:15}}>Login with Google</Text>
-          </Icon.Button>
-        <TouchableOpacity
-          onPress={()=>alert('touched')}
-        >
-
-          <Icon
-            name="google-home"
-            size={60}
-            color='red'
-            style={{
-
-            }}
-          />
-
-        </TouchableOpacity>
-        <Text>Hello cam! :)</Text>
+        <SuperText style={styles.rogue}>
+          Hello this is my super text 
+          {
+            Platform.OS ==='ios' ?
+            ' Welcome to ios':
+            ' Welcome to Android'
+          }
+        </SuperText>
       </View>
     )
   }
@@ -59,6 +42,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  rogue:{
+    ...Platform.select({
+      ios:{
+        backgroundColor:'red',
+      
+      },
+      android:{
+        backgroundColor:'black'
+      }
+    })
+  }
 
 });
 
