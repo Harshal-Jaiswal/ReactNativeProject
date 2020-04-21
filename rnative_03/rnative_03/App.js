@@ -14,6 +14,10 @@ import { PermissionsAndroid, requestMultiple } from 'react-native';
 
 class App extends Component {
 
+  state = {
+    MyContacts: [{ givenName: 'ddd' }]
+  }
+
   async requestContactPermission() {
     if (Platform.OS == 'android') {
       PermissionsAndroid.request(
@@ -25,15 +29,23 @@ class App extends Component {
       )
         .then(granted => {
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            return true;
+            Contacts.getAll((err, contacts) => {
+              if (err) {
+                throw err;
+              }
+              this.setState({
+                MyContacts: contacts
+              })
+              // console.warn(contacts)
+            })
           }
           else {
             // Handle
-            return false;
+
           }
         })
         .catch(err => {
-          console.log('PermissionsAndroid', err)
+
         })
     }
     // if (Platform.OS === 'ios') {
@@ -52,35 +64,124 @@ class App extends Component {
     //   }
     // }
   }
+  addContacts = () => {
+    if (Platform.OS == 'android') {
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS,
+        {
+          'title': 'Allow to Contacts',
+          'message': 'Allow to Contacts'
+        }
+      )
+        .then(granted => {
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            const nweContact = {
+              emailAddresses: [{
+                label: 'work',
+                email: 'carl-jung@example.com',
+              }],
+              familyName: "JONES",
+              givenName: "CARL",
+              phoneNumbers: [{
+                label: 'mobile',
+                number: '(555) 555-5555',
+              }]
+            }
+
+            Contacts.addContact(nweContact, (err) => {
+              if (err) throw err;
+              this.getContacts();
+            })
+          }
+          else {
+            // Handle
+
+          }
+        })
+        .catch(err => {
+
+        })
+    }
+  }
 
   getContacts = () => {
 
-    this.requestContactPermission().then((didGet) => {
-      if (didGet) {
-        Contacts.getAll((err, contacts) => {
-          if (err) {
-            throw err;
-          }
-          console.warn(contacts)
-        })
-      } else {
+    this.requestContactPermission()
+    // .then((didGet) => {
+    //   if (didGet) {
+    //     Contacts.getAll((err, contacts) => {
+    //       if (err) {
+    //         throw err;
+    //       }
+    //       console.warn(contacts)
+    //     })
+    //   } else {
 
-        alert(' no contact permission')
-      }
-    })
-    Contacts.getAll( (err, contacts ) => {
+    //     alert(' no contact permission')
+    //   }
+    // })
+    // Contacts.getAll( (err, contacts ) => {
+    //   if(err){
+    //     throw err;
+    //   }
+    //   console.warn(contacts)
+    // })
+  }
+
+  list = () => {
+    return this.state.MyContacts.map((item, id) => {
+      return (
+        <View
+          key={id}
+        >
+          <Text>{item.givenName}{item.familyName}</Text>
+        </View>
+      );
+    });
+  };
+
+  openForm =()=>{
+    const nweContact = {
+      emailAddresses: [{
+        label: 'work',
+        email: 'carl-jung@example.com',
+      }],
+      familyName: "JONES",
+      givenName: "ADAM",
+      phoneNumbers: [{
+        label: 'mobile',
+        number: '(555) 555-5555',
+      }]
+    }
+
+    Contacts.openContactForm(nweContact,(err)=>{
       if(err){
-        throw err;
+        console.warn(err)
       }
-      console.warn(contacts)
     })
   }
+
   render() {
     return (
       <View style={styles.app}>
+        <ScrollView style={{ width: '100%' }}>
+          {
+            this.list()
+          }
+
+        </ScrollView>
+
         <Button
           title='Load Contacts'
           onPress={this.getContacts}
+        />
+        <Button
+          title='Add Contacts'
+          onPress={this.addContacts}
+        />
+        <Button
+          title='Open Form'
+          onPress={this.openForm}
         />
         <Text>Hello cam! :)</Text>
       </View>
