@@ -81,6 +81,8 @@ target 'rnative_03' do
 
   pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'rnative_03Tests' do
     inherit! :complete
     # Pods for testing
