@@ -4,30 +4,49 @@ import {
   StyleSheet,
   View,
   Text,
-  Button
+  Button,
+  ActivityIndicator
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import AuthLogo from './authLogo';
+import AuthForm from './authForm';
 
 class AuthComponent extends Component {
+  state = {
+    loading:false
+  }
   render() {
-
-    return (
-      <View style={styles.container}>
-        <Text>
-          Auth Login
-        </Text>
-       <Button 
-         title='go'
-         onPress={()=> this.props.navigation.navigate('App')}
-       />
+   
+    if(this.state.loading){
+      return(
+      <View style={styles.loading}>
+        <ActivityIndicator/>
       </View>
+      )
+    }else{
+    return (
+      <ScrollView style={styles.container}>
+        <View>
+          <AuthLogo/>  
+          <AuthForm/>
+        </View>
+      </ScrollView>
     );
+    }
   }
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#1d428a',
+    padding:50
+  },
+  loading:{
+    flex:1,
+    backgroundColor:'#fff',
+    alignItems:'center',
+    justifyContent:'center'
   }
 });
 
