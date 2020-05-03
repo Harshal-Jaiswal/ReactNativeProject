@@ -1,8 +1,28 @@
-export default function(state ={},action){
+import { SIGN_IN, SIGN_UP } from '../types';
 
-  switch(action.type){
-    case 'SIGN_IN':
-      return state
+
+export default function (state = {}, action) {
+
+  switch (action.type) {
+    case SIGN_IN:
+      return {
+        ...state,
+        auth: {
+          uid: action.payload.loaclId || false,
+          token: action.payload.idToken || false,
+          refToken: action.payload.refreshToken || false
+        }
+      }
+
+    case SIGN_UP:
+      return {
+        ...state,
+        auth: {
+          uid: action.payload.loaclId || false,
+          token: action.payload.idToken || false,
+          refToken: action.payload.refreshToken || false
+        }
+      }
     default:
       return state
   }
