@@ -9,9 +9,11 @@ import {
 import Input from '../../utils/forms/input';
 import ValidationRules from '../../utils/forms/validationRules';
 
-import {connect} from 'react-redux';
-import { signUp, signIn} from '../../store/actions/users_actions';
-import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import { signUp, signIn } from '../../store/actions/users_actions';
+import { bindActionCreators } from 'redux';
+import {setTokens} from '../../utils/misc';
+
 
 class AuthForm extends Component {
   state = {
@@ -69,6 +71,7 @@ class AuthForm extends Component {
       form: formCopy
     })
   }
+
   formHasErrors = () => (
     this.state.hasErrors ?
       <View style={styles.errorContainer}>
@@ -94,6 +97,17 @@ class AuthForm extends Component {
     }
 
   }
+
+  manageAccess = () => {
+    if(!this.props.User.auth.token){
+      this.setState({hasErrors:true})
+    }else{
+      setTokens(this.props.User.auth, ()=>{
+        this.setState({hasErrors:false})
+        this.props.goNext();
+      })
+    }
+  }
   submitUser = () => {
 
     let isFormValid = true;
@@ -116,17 +130,21 @@ class AuthForm extends Component {
       }
     }
 
-    if(isFormValid){
-      if(this.state.type === 'Login'){
-        this.props.signIn(formToSubmit);
+    if (isFormValid) {
+      if (this.state.type === 'Login') {
+        this.props.signIn(formToSubmit).then(() => {
+          this.manageAccess()
+        });
 
-      }else{
-        this.props.signUp(formToSubmit);
-        
+      } else {
+        this.props.signUp(formToSubmit).then(() => {
+          this.manageAccess()
+        });
+
       }
-    }else{
+    } else {
       this.setState({
-        hasErrors:true
+        hasErrors: true
       })
     }
 
@@ -222,16 +240,16 @@ const styles = StyleSheet.create({
   }
 })
 
-function mapStateToProps(state){
-  console.warn(state)
+function mapStateToProps(state) {
+  // console.warn(state)
   return {
     User: state.User
   }
 }
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    signIn,signUp
+    signIn, signUp
   }, dispatch);
 }
-export default connect(mapStateToProps,mapDispatchToProps)(AuthForm);
+export default connect(mapStateToProps, mapDispatchToProps)(AuthForm);
