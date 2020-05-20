@@ -5,14 +5,24 @@ import {
   View,
   Text,
 } from 'react-native';
+import LogoTitle from '../../utils/logo';
 
 class GamesComponent extends Component {
+  static navigationOptions = {
+
+    headerTitleAlign: 'center',
+    headerTitle: () => (<LogoTitle />),
+    headerStyle: {
+      backgroundColor: '#001338'
+    },
+    headerTintColor: 'blue',
+  }
   render() {
-    
+
     return (
       <View style={styles.container}>
         <Text>
-        Games Component
+          Games Component
         </Text>
       </View>
     );
