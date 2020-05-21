@@ -6,10 +6,29 @@ import axios from 'axios';
 import {FIREBASEURL} from '../../utils/misc';
 
 export function getNews(){
-  return{
-    types:GET_NEWS,
-    payload:{
-      news:'something'
+
+  const request = axios({
+    method: "GET",
+    url: FIREBASEURL+'/news.json'
+
+  }).then( response => {
+    const articles = [];
+    console.log(response.data)
+    for(let key in response.data){
+      articles.push({
+        ...response.data[key],
+        id: key
+      })
     }
+
+    return articles;
+  }).catch(err =>{
+    return false;
+  })
+
+
+  return{
+    type: GET_NEWS,
+    payload:request
   }
 }
