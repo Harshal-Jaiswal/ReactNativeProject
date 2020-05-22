@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     borderColor: '#dddddd',
   },
   titleCard: {
+    fontFamily:'Roboto-Bold',
     color: '#323232',
     fontSize: 16,
     padding: 10,
@@ -123,6 +124,7 @@ const styles = StyleSheet.create({
 
   },
   bottomCartText: {
+    fontFamily:'Roboto-Light',
     color: '#828282',
     fontSize: 12,
   }
